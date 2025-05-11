@@ -30,27 +30,27 @@ Returns a list of all items.
 -- GET /api/items/{id}
 Returns a single item by ID.
 
-200 OK if found
-404 Not Found otherwise
+- 200 OK if found
+- 404 Not Found otherwise
 
 -- POST /api/items
 Creates a new item.
 
-201 Created if valid
-400 Bad Request + list of errors if invalid
+- 201 Created if valid
+- 400 Bad Request + list of errors if invalid
 
 -- PUT /api/items/{id}
 Updates an existing item by ID.
 
-200 OK if updated
-400 Bad Request if validation fails
-404 Not Found if ID doesn’t exist
+- 200 OK if updated
+- 400 Bad Request if validation fails
+- 404 Not Found if ID doesn’t exist
 
 -- DELETE /api/items/{id}
 Deletes an item by ID.
 
-204 No Content if deleted
-404 Not Found if ID doesn’t exist
+- 204 No Content if deleted
+- 404 Not Found if ID doesn’t exist
 
 -- GET /api/items/process
 Processes all items asynchronously.
