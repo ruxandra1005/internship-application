@@ -53,35 +53,68 @@ public class ItemService {
      * Examine how errors are handled and propagated
      * Consider the interaction between Spring's @Async and CompletableFuture
      */
-    @Async
-    public List<Item> processItemsAsync() {
 
-        List<Long> itemIds = itemRepository.findAllIds();
+
+    /**
+     *  In the presented code there is a risk of race condition.
+     *  This might happen because processedItems and processedCount are modified simultaneously.
+     * Also, the @Async method can return only void or CompletableFuture<T> if I want an asynchronous result.
+     * So:
+     * - we keep the annotation @Async;
+     * - we modify the returnable result with CompletableFuture
+     *
+     */
+    @Async
+    public CompletableFuture<List<Item>> processItemsAsync() {
+
+        List<Long> itemIds = itemRepository.findAllIds(); // all IDs
+        List<CompletableFuture<Item>> futures = new ArrayList<>(); //all futures (tasks)
 
         for (Long id : itemIds) {
-            CompletableFuture.runAsync(() -> {
+            CompletableFuture<Item> future = CompletableFuture.supplyAsync(() -> { //lamda expression
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(100); // time to process each
 
-                    Item item = itemRepository.findById(id).orElse(null);
-                    if (item == null) {
-                        return;
+                    //to avoid NullPointerException
+                    Optional<Item> optionalItem = itemRepository.findById(id);
+                    if (optionalItem.isEmpty()) {
+                        return null;
                     }
 
+                    Item item = optionalItem.get();
+                    item.setStatus("PROCESSED"); //we created the setter in Item
+                    Item saved = itemRepository.save(item);  //saved if processed
                     processedCount++;
-
-                    item.setStatus("PROCESSED");
-                    itemRepository.save(item);
-                    processedItems.add(item);
+                    System.out.println("Processed items = " + processedCount);
+                    return saved;
 
                 } catch (InterruptedException e) {
-                    System.out.println("Error: " + e.getMessage());
+                    System.out.println("Error while processing item with ID " + id + ": " + e.getMessage());
+                    return null;
                 }
             }, executor);
+
+            futures.add(future); // adds in list
         }
 
-        return processedItems;
+        // created a CompletableFurure that waits for all tasks to finish
+        CompletableFuture<Void> allDone = CompletableFuture.allOf(
+                futures.toArray(new CompletableFuture[0])
+        );
+
+        allDone.join(); // waits for all until every async op is done
+
+        // takes info from CompletableFuture without try-catch (future.get())
+        for (CompletableFuture<Item> f : futures) {
+            Item item = f.join();
+            if (item != null) {
+                processedItems.add(item);
+            }
+        }
+
+        return CompletableFuture.completedFuture(processedItems);
     }
 
 }
+
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/items")
@@ -22,12 +23,15 @@ public class ItemController {
         return new ResponseEntity<>(itemService.findAll(), HttpStatus.OK);
     }
 
+    /**
+    * The returnable should CREATE and the erros should be BAD_REQUEST
+    * */
     @PostMapping
     public ResponseEntity<Item> createItem(@Valid @RequestBody Item item, BindingResult result) {
         if (result.hasErrors()) {
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(itemService.save(item), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(itemService.save(item), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -41,7 +45,7 @@ public class ItemController {
     public ResponseEntity<Item> updateItem(@PathVariable Long id, @RequestBody Item item) {
         Optional<Item> existingItem = itemService.findById(id);
         if (existingItem.isPresent()) {
-            item.setId(id);
+            item.setId(id); //created this method in Item
             return new ResponseEntity<>(itemService.save(item), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -54,8 +58,11 @@ public class ItemController {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
+    /**
+     * expected CompletableFuture because of modified precessedItemsAsync
+     * */
     @GetMapping("/process")
-    public ResponseEntity<List<Item>> processItems() {
+    public ResponseEntity<CompletableFuture<List<Item>>> processItems() {
         return new ResponseEntity<>(itemService.processItemsAsync(), HttpStatus.OK);
     }
 }

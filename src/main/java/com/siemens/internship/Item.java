@@ -25,4 +25,10 @@ public class Item {
 
     // Add email regex validation
     private String email;
+
+    public void setStatus(String processed) {
+    }
+
+    public void setId(Long id) {
+    }
 }
