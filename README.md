@@ -15,9 +15,9 @@ Run the main() method in InternshipApplication.java
 
 3. Connect to H2 Console
 
-Access the database UI at: http://localhost:8080/h2-console
-In the application.properties file you get this URL: jdbc:h2:mem:testdb
-No username, no password, you test the connection and then run.
+- Access the database UI at: http://localhost:8080/h2-console
+- In the application.properties file you get this URL: jdbc:h2:mem:testdb
+- No username, no password, you test the connection and then run.
 
 4. Access the API at:
 http://localhost:8080/api/items
@@ -57,6 +57,6 @@ Processes all items asynchronously.
 Returns a list of updated items (status = "PROCESSED").
 
 # Validation Rules
--- status: must not be blank
--- email: must be a well-formed email address
--- name, description: optional (customizable)
+- status: must not be blank
+- email: must be a well-formed email address
+- name, description: optional (customizable)
