@@ -19,7 +19,7 @@ Access the database UI at: http://localhost:8080/h2-console
 In the application.properties file you get this URL: jdbc:h2:mem:testdb
 No username, no password, you test the connection and then run.
 
-3. Access the API at:
+4. Access the API at:
 http://localhost:8080/api/items
 using POSTMAN
 
