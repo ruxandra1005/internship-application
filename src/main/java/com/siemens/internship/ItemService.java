@@ -2,6 +2,7 @@ package com.siemens.internship;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class ItemService {
                     }
 
                     Item item = optionalItem.get();
-                    item.setStatus("PROCESSED"); //we created the setter in Item
+                    item.setStatus("PROCESSED"); //using LOMBOK we have all setters and getters in Item
                     Item saved = itemRepository.save(item);  //saved if processed
                     processedCount++;
                     System.out.println("Processed items = " + processedCount);
