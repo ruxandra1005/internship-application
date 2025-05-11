@@ -1,39 +1,62 @@
-## Hi there 👋
+# Siemens Java Internship - Code Refactoring Project 2025
+This is a Spring Boot REST API developed as part of the Siemens Internship application project.
+The application manages a list of `Item` objects, allowing full CRUD operations and asynchronous item processing using `CompletableFuture`.
 
+---
+# How to Run:
 
-## Siemens Java Internship - Code Refactoring Project
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/ruxandra1005/internship-application.git
 
-This repository contains a Spring Boot application that implements a simple CRUD system with some asynchronous processing capabilities. The application was created by a development team in a hurry and while it implements all required features, the code quality needs significant improvement.
+2. Open in IntelliJ / VS Code
 
-## Getting Started
-- Clone this repository
-- Import the project into your IDE as a Maven project (Java 17, might work with other Java versions as well)
-- Study the existing code and identify issues
-- Implement your refactoring changes
-- Test thoroughly to ensure functionality is preserved
+Run the main() method in InternshipApplication.java
 
-## Your Assignment
-  The Project should have the following structure:
+3. Connect to H2 Console
 
-![image](https://github.com/user-attachments/assets/ab45f225-ff1f-4ff7-bbaa-3d5d0c21e7b1)
+Access the database UI at: http://localhost:8080/h2-console
+In the application.properties file you get this URL: jdbc:h2:mem:testdb
+No username, no password, you test the connection and then run.
 
-ⓘ
-##  You will have to:
-1. Fix all logical errors while maintaining the same functionality
-2. Implement proper error handling and validation
-3. Be well-documented with clear, concise comments
-4. Write test functions with as much coverage as possible
-5. Make sure that the Status Codes used in Controller are correct
-6. Find a way to implement an email validation
-7. Refactor the **processItemsAsync** function
-    The **processItemsAsync** function is supposed to:
-      1. Asynchronously process EVERY item (retrieve from database, update status, and save)
-      2. Track which items were processed
-      3. Return a list when all items have been processed
-      4. Provide an accurate list of all successfully processed items
-      HINT: You are free to modify the function and variables as much as you want :)
+3. Access the API at:
+http://localhost:8080/api/items
+using POSTMAN
 
+ # Endpoints for POSTMAN
+-- GET /api/items
+Returns a list of all items.
 
-Copy the project and make the solution public on your personal GitHub.
-Provide us the GitHub URL via email.
-(Don't forget to make the repository PUBLIC 😁)
+-- GET /api/items/{id}
+Returns a single item by ID.
+
+200 OK if found
+404 Not Found otherwise
+
+-- POST /api/items
+Creates a new item.
+
+201 Created if valid
+400 Bad Request + list of errors if invalid
+
+-- PUT /api/items/{id}
+Updates an existing item by ID.
+
+200 OK if updated
+400 Bad Request if validation fails
+404 Not Found if ID doesn’t exist
+
+-- DELETE /api/items/{id}
+Deletes an item by ID.
+
+204 No Content if deleted
+404 Not Found if ID doesn’t exist
+
+-- GET /api/items/process
+Processes all items asynchronously.
+Returns a list of updated items (status = "PROCESSED").
+
+# Validation Rules
+status: must not be blank
+email: must be a well-formed email address
+name, description: optional (customizable)
