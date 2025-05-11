@@ -57,6 +57,6 @@ Processes all items asynchronously.
 Returns a list of updated items (status = "PROCESSED").
 
 # Validation Rules
-status: must not be blank
-email: must be a well-formed email address
-name, description: optional (customizable)
+-- status: must not be blank
+-- email: must be a well-formed email address
+-- name, description: optional (customizable)
